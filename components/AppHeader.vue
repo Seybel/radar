@@ -1,6 +1,6 @@
 <template>
     <header class="flex justify-between items-center mt-10">
-      <NuxtLink to="/" class="text-xl font-bold">
+      <NuxtLink to="/" class="text-2xl font-bold">
         Radar - Finance Tracker
       </NuxtLink>
       <div>
