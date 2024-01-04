@@ -4,7 +4,7 @@
 
     <div class="text-2xl font-extrabold text-black dark:text-white mb-2">
       <USkeleton class="h-8 w-full" v-if="loading" />
-      <div v-else>{{ amount }}</div>
+      <div v-else>{{ currency }}</div>
     </div>
 
     <div>
@@ -23,14 +23,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   title: String,
-  amount: Number,
-  lastAmount: Number,
+  amount: {
+    type: Number,
+    required: true
+  },
+  lastAmount: {
+    type: Number,
+    required: true
+  },
   color: String,
   loading: Boolean,
 });
+
+const { currency } = useCurrency(props.amount);
 
 const trendingUp = computed(() => props.amount >= props.lastAmount);
 

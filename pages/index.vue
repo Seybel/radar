@@ -41,31 +41,64 @@
     </section>
 
     <section>
-    <div class="mb-10">
-      <Transaction v-for="(transaction, idx) in transactions" :key="idx" :transaction="transaction" />
-    </div>
-  </section>
+      <div class="mb-10">
+        <div
+          v-for="(transactionsOnDay, transactionDate) in categorizeTransactionsByDate"
+          :key="transactionDate"
+          class="mb-10"
+        >
+          <DailyTransactionSummary
+            :date="transactionDate"
+            :transactions="transactionsOnDay"
+          />
+          <Transaction
+            v-for="transaction in transactionsOnDay"
+            :key="transaction.id"
+            :transaction="transaction"
+          />
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
+import { type ITransaction } from "~/utils/interfaces/Transaction";
 import { transactionViewOptions } from "~/constants";
 
 const supabase = useSupabaseClient();
 
 const selectedView = ref(transactionViewOptions[1]);
 
+const { data, pending } = await useAsyncData<ITransaction[]>(
+  "transactions",
+  async () => {
+    const { data, error } = await supabase.from("transactions").select();
 
-const { data, pending } = await useAsyncData('transactions', async () => {
-    const { data, error } = await supabase
-      .from('transactions')
-      .select();
+    if (error) return [];
 
-      if(error) return [];
+    return data as ITransaction[];
+  }
+);
 
-      return data;
+const transactions: ITransaction[] = data.value ?? [];
+
+const categorizeTransactionsByDate = computed(() => {
+  let dateGroup: any = {};
+
+  transactions.forEach((transaction: ITransaction) => {
+    let date: string = new Date(transaction?.created_at)
+      .toISOString()
+      .split("T")[0];
+    if (!dateGroup[date]) {
+      dateGroup[date] = [];
+    }
+
+    dateGroup[date].push(transaction);
+  });
+
+  return dateGroup;
 });
 
-
-const transactions = data.value;
+console.log(categorizeTransactionsByDate);
 </script>
