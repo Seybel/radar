@@ -21,13 +21,13 @@
         color="red"
         title="Expense"
         :amount="4000"
-        :last-amount="3000"
+        :last-amount="6000"
         :loading="false"
       />
       <Trend
         color="green"
         title="Investments"
-        :amount="4000"
+        :amount="5000"
         :last-amount="3000"
         :loading="false"
       />

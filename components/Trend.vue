@@ -15,9 +15,9 @@
           class="w-6 h-6"
           :class="{ green: trendingUp, red: !trendingUp }"
         />
-        <!-- <div class="text-gray-500 dark:text-gray-400">
-            {{ percentageTrend }} vs last period
-          </div> -->
+        <div class="text-gray-500 dark:text-gray-400">
+          {{ percentageTrend }} vs last period
+        </div>
       </div>
     </div>
   </div>
@@ -39,6 +39,17 @@ const icon = computed(() =>
     ? "i-heroicons-arrow-trending-up"
     : "i-heroicons-arrow-trending-down"
 );
+
+const percentageTrend = computed(() => {
+  if (props.amount === 0 || props.lastAmount === 0) return "∞%";
+
+  const bigger = Math.max(props.amount, props.lastAmount);
+  const lower = Math.min(props.amount, props.lastAmount);
+
+  const ratio = ((bigger - lower) / lower) * 100;
+
+  return `${Math.ceil(ratio)}%`;
+});
 </script>
 
 <style scoped>
